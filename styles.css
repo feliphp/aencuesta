@@ -1,0 +1,47 @@
+/** General Styles **/
+/*
+@Autor: JFHR
+@Company: Itera
+@fecha:  2019-03-08
+@update:  2019-03-14
+@Comentario: Versiones del módulo
+* Estilos del módulo, en especial de las viñetas del arbol
+*/
+.glyphicon-link:before{
+    position: relative;
+    content: "\f0c1";
+    font-size: 15px;
+    top: -2px;
+    font-family: FontAwesome;
+    left: -6px;
+    padding-left: 22px;
+}
+#title{
+    position: relative;
+    margin: auto auto;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+#html {
+    border: #621132 5px solid;
+  border-top-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+    margin: 30px;
+    padding: 30px;
+    background-color: #f6f6f6;
+}
+#title {
+    position: relative;
+    text-align: center;
+    top: -20px;
+}
+#table-poll {
+    position: relative;
+    margin-top: -80px;
+    font-size: 14px;
+    bottom: -40px;
+}
+
+#table-poll fieldset {
+    border: 0px !important;
+}
