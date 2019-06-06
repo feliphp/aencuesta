@@ -1,14 +1,14 @@
 <?php
   /**
-   * Fecha:  2019-03-08 - Update: 2019-03-14
+   * Fecha:  2019-03-08 - Update: 2019-03-28
    * PHP Version 7
    * 
    * @category   Components
    * @package    Moodle
    * @subpackage Mod_Aulaencuesta
-   * @author     JFHR <felipe.herrera@iteraprocess.com>
+   * @author     JFHR <felsul@hotmail.com>
    * @license    https://www.gnu.org/licenses/gpl-3.0.txt GNU/GPLv3
-   * @link       https://aulavirtual.issste.gob.mx
+   * @link       
    */
 
 require_once dirname(dirname(dirname(__FILE__))).'/config.php';
@@ -33,7 +33,6 @@ if ($contextid) {
 }
 
 $PAGE->set_url($CFG->wwwroot.'/mod/aulaencuesta/index.php');
-require_capability('moodle/site:config', get_context_instance(CONTEXT_SYSTEM));
 $PAGE->navbar->add($strname);
 
 $PAGE->set_context($context);
@@ -44,6 +43,8 @@ $strorg = get_string('aulaencuesta', 'aulaencuesta');
 echo $PAGE->set_title($strorg);  
 echo $OUTPUT->header();  
 echo $OUTPUT->heading($strname);  
+
+if (isloggedin()) {
 
 //pagination
 $array_all_items = Aulaencuesta_Get_Total_Items_In_table();
@@ -120,6 +121,27 @@ echo "<table class='flexible reportlog generaltable generalbox'
                 'aulaencuesta'
             );
             echo "</th>";
+            echo "<th class='header c3' scope='col'>";
+            echo "".
+            get_string(
+                'label_table_answer_three',
+                'aulaencuesta'
+            );
+            echo "</th>";
+            echo "<th class='header c3' scope='col'>";
+            echo "".
+            get_string(
+                'label_table_answer_four',
+                'aulaencuesta'
+            );
+            echo "</th>";
+            echo "<th class='header c3' scope='col'>";
+            echo "".
+            get_string(
+                'label_table_answer_five',
+                'aulaencuesta'
+            );
+            echo "</th>";
             echo "<thead>";
 
             $registered_data = Aulaencuesta_Get_Answers_poll(
@@ -140,17 +162,53 @@ echo "<table class='flexible reportlog generaltable generalbox'
                 echo $user;
                 echo "</td>";
                 echo "<td>";
-                echo $data->answer_one;
+                if ($data->answer_one == '1') {
+                    echo "Sí"; 
+                } else {
+                    echo "No"; 
+                };
                 echo "</td>";
                 echo "<td>";
-                echo $data->answer_two;
+                if ($data->answer_two == '1') {
+                    echo "Sí"; 
+                } else {
+                    echo "No"; 
+                };
+                echo "</td>";
+                echo "<td>";
+                if ($data->answer_three == '1') {
+                    echo "Sí"; 
+                } else {
+                    echo "No"; 
+                };
+                echo "</td>";
+                echo "<td>";
+                if ($data->answer_four == '1') {
+                    echo "Sí"; 
+                } else {
+                    echo "No"; 
+                };
+                echo "</td>";
+                echo "<td>";
+                echo $data->answer_five;
                 echo "</td>";
                 echo "</tr>";
             }
             echo "</tbody>";
             echo "</table>";
+            $img_down = $OUTPUT->image_url('download_data', 'aulaencuesta');
 
-            echo "<br><a href='lib.php?nr=1'>".
-            get_string('download_xls', 'aulaencuesta')."</a>";
-            
-            echo $OUTPUT->footer();
+            echo "<br><a href='lib.php?nr=1'><img src='".$img_down."'".
+            " height='25px' width='25px'>".get_string(
+                'download_xls', 
+                'aulaencuesta'
+            )."</a>";
+            } else {
+    	echo get_string(
+        'requireloginerror',
+        'aulaencuesta'
+    )."<a href='".$CFG->wwwroot."'> Return</a>";
+}
+
+    echo $OUTPUT->footer();
+

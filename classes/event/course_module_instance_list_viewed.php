@@ -6,9 +6,9 @@
  * @category   Components
  * @package    Moodle
  * @subpackage Mod_Aulaencuesta
- * @author     JFHR <felipe.herrera@iteraprocess.com>
+ * @author     JFHR <felsul@hotmail.com>
  * @license    https://www.gnu.org/licenses/gpl-3.0.txt GNU/GPLv3
- * @link       https://aulavirtual.issste.gob.mx
+ * @link       
  */
 namespace aulaencuesta\event;
 defined('MOODLE_INTERNAL') || die();
@@ -17,9 +17,9 @@ defined('MOODLE_INTERNAL') || die();
  * 
  * @category Class
  * @package  Moodle
- * @author   JFHR <felipe.herrera@iteraprocess.com>
+ * @author   JFHR <felsul@hotmail.com>
  * @license  http://www.gnu.org/copyleft/gpl.html GNU General Public License
- * @link     https://aulavirtual.issste.gob.mx
+ * @link     
  */
 class Course_Module_Instance_List_Viewed extends \core\event
 \course_module_instance_list_viewed

@@ -1,14 +1,14 @@
 <?php
 /**
- * Fecha: 2019-03-08 - Update: 2019-03-14
+ * Fecha: 2019-03-08 - Update: 2019-03-28
  * PHP Version 7
  * 
  * @category   Components
  * @package    Moodle
  * @subpackage Mod_Aulaencuesta
- * @author     JFHR <felipe.herrera@iteraprocess.com>
+ * @author     JFHR <felsul@hotmail.com>
  * @license    https://www.gnu.org/licenses/gpl-3.0.txt GNU/GPLv3
- * @link       https://aulavirtual.issste.gob.mx
+ * @link       
  */
 require_once dirname(dirname(dirname(__FILE__))).'/config.php';
 
@@ -25,7 +25,7 @@ defined('MOODLE_INTERNAL') || die();
  */
 function Aulaencuesta_Get_Answers_poll($order,$dir,$page, $limit) 
 {
-    global $DB;
+    global $DB, $PAGE;
 
     if (!$dir) {
          $dir = 'asc';
@@ -45,7 +45,9 @@ function Aulaencuesta_Get_Answers_poll($order,$dir,$page, $limit)
     $offset = ($pag-1) * $limit;
 
     $query ="SELECT ae.id as id, ae.user as user, ae.answer_one as answer_one,".
-            "ae.answer_two as answer_two, ae.datecreated as datecreated".
+            "ae.answer_two as answer_two,ae.answer_three as answer_three,". 
+            "ae.answer_four as answer_four, ae.answer_five as answer_five,".
+            " ae.datecreated as datecreated".
             " FROM mdl_aulaencuesta ae ".
             " INNER JOIN mdl_user mu ON mu.id = ae.user ".
             " $filtro_query_orden LIMIT $offset, $limit";
@@ -66,19 +68,31 @@ function Aulaencuesta_Get_Total_Items_In_table()
 /**
  * Save
  * 
- * @param int    $user        id user
- * @param string $answer_one  answer
- * @param string $answer_two  second answer
- * @param string $datecreated datecreated
+ * @param int    $user         id user
+ * @param string $answer_one   answer
+ * @param string $answer_two   second answer
+ * @param string $answer_three 3 answer
+ * @param string $answer_four  4 answer
+ * @param string $answer_five  5 answer
+ * @param string $datecreated  datecreated
  * 
  * @return array
  */
-function Aulaencuesta_save($user, $answer_one, $answer_two, $datecreated) 
-{
+function Aulaencuesta_save(
+    $user, 
+    $answer_one, 
+    $answer_two, 
+    $answer_three, 
+    $answer_four, 
+    $answer_five, 
+    $datecreated
+) {
         global $DB;
-        $sql_insert = "INSERT INTO mdl_aulaencuesta (user, answer_one,
-        answer_two, datecreated) VALUES
-        (".$user.",'".$answer_one."','".$answer_two."','".$datecreated."')" ;
+        $sql_insert = "INSERT INTO mdl_aulaencuesta (course,name,user, answer_one
+        , answer_two, answer_three, answer_four, answer_five, datecreated) VALUES
+        (2,'".$user."', '".$user."','".$answer_one."','".$answer_two."',
+        '".$answer_three."','".$answer_four."','".$answer_five."',
+        '".$datecreated."')" ;
         $DB->execute($sql_insert);
 }
 /**
@@ -90,7 +104,7 @@ function Aulaencuesta_save($user, $answer_one, $answer_two, $datecreated)
  */
 function Aulaencuesta_Get_username($id)
 {
-    global $DB;
+    global $DB, $PAGE;
     $query ="SELECT username FROM {user} WHERE id = ".$id."";
     $result_string = $DB->get_record_sql($query);
     return $result_string->username;
@@ -114,8 +128,11 @@ function Aulaencuesta_Descarga_Datos_xls()
     $header = array( 
         'ID'=>'string',
         'User'=>'string',
-        'answer_one'=>'string',
-        'answer_two'=>'string',
+        'answer_one(Amigable)'=>'string',
+        'answer_two(Facil Encontrar Curso)'=>'string',
+        'answer_three(Recomienda)'=>'string',
+        'answer_four(Facil Navegar)'=>'string',
+        'answer_five(Área de Interes)'=>'string',
         'datecreated'=>'string'
     );
 
@@ -136,13 +153,36 @@ function Aulaencuesta_Descarga_Datos_xls()
     $result = $DB->get_records_sql($sql, null);
 
     foreach ($result as $data) {
+        if ($data->answer_one == '1') {
+            $resp_one = 'Sí';
+        } else {
+            $resp_one = 'No';
+        }
+        if ($data->answer_two == '1') {
+            $resp_two = 'Sí';
+        } else {
+            $resp_two = 'No';
+        }
+        if ($data->answer_three == '1') {
+            $resp_three = 'Sí';
+        } else {
+            $resp_three = 'No';
+        }
+        if ($data->answer_four == '1') {
+            $resp_four = 'Sí';
+        } else {
+            $resp_four = 'No';
+        }
         for ($i=0; $i< count(result); $i++ ) {
             $array['A'.$i] = $data->id; 
             $user = Aulaencuesta_Get_username($data->user);
             $array['B'.$i] = (string)$user;
-            $array['C'.$i] = (string)$data->answer_one;
-            $array['D'.$i] = (string)$data->answer_two;
-            $array['E'.$i] = (string)$data->datecreated; 
+            $array['C'.$i] = (string)$resp_one;
+            $array['D'.$i] = (string)$resp_two;
+            $array['E'.$i] = (string)$resp_three;
+            $array['F'.$i] = (string)$resp_four;
+            $array['G'.$i] = (string)$data->answer_five;
+            $array['H'.$i] = (string)$data->datecreated; 
         } 
         $writer->writeSheetRow('Sheet1', $array);
     } 
